@@ -11,10 +11,11 @@ b = 0.27  # допустимый % потерь
 
 N = 0  # кол-во переданных пакетов
 X = 0  # кол-во уничтоженных пакетов
+h = 0  # кол-во времени с включенным ускорением
 
 j = 0  # номер заявки
 t = 0  # время
-A = []  # [(j, i), ]  все заявки
+A = []  # [(j, t), ]  все заявки
 
 while (t + x) <= interval:
     t += x
@@ -22,23 +23,15 @@ while (t + x) <= interval:
     A.append((j, t))
     x = randint(2, 8)
 
-# REMOVE
-#========================================
-# import pickle
-# pickle.dump(A, open("save4.p", "wb"))
-# A = pickle.load(open("save3.p", "rb"))
-# j = len(A)
-# A_copy = list.copy(A)
-#========================================
-
 c1 = Channel(z)
 c2 = Channel(z)
 i = 0  # время
 
 while i < interval:
-    if N and X/N > b:
+    if N and X / N > b:
         c1.set_service_time(r)
         c2.set_service_time(r)
+        h += 1
     else:
         c1.set_service_time(z)
         c2.set_service_time(z)
@@ -59,4 +52,8 @@ while i < interval:
             X += 1
     i += 1
 
-print(j, N, X, X/N, sep="; ")
+print(f"Период моделирования: {interval/1000} с")
+print(f"Сгенерировано: {j} пакетов")
+print(f"Передано: {N} пакетов")
+print(f"Частота уничтожения пакетов: {X / N * 100:.2f}%")
+print(f"Частота подключения ресурса: {h / interval * 100:.2f}%")
