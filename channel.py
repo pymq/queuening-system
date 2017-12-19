@@ -10,6 +10,9 @@ class Channel:
     def release_time(self):
         return self._release_time
 
+    def get_queue_count(self):
+        return len(self.queue) - 1 if len(self.queue) > 0 else 0
+
     def set_service_time(self, service_time):
         self._service_time = service_time
 
@@ -35,8 +38,8 @@ class Channel:
         return self._is_empty
 
     def add(self, item):
-        item_time = item[-1]
         self.queue.append(item)
         if self.is_empty:
+            item_time = item[-1]
             self._is_empty = False
             self._release_time = item_time + self._service_time
